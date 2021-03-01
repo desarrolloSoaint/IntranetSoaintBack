@@ -12,10 +12,42 @@
         }
     ],
     "paths": {
+        "/api/getRoles": {
+            "get": {
+                "summary": "Obtener los roles",
+                "operationId": "App\\Http\\Controllers\\RoleController::getRoles",
+                "responses": {
+                    "422": {
+                        "description": "Error al obtener los Roles"
+                    },
+                    "200": {
+                        "description": "Exito al obtener los roles"
+                    }
+                }
+            }
+        },
+        "/api/addRole": {
+            "get": {
+                "summary": "Agregar Roles",
+                "operationId": "App\\Http\\Controllers\\RoleController::addRole",
+                "responses": {
+                    "422": {
+                        "description": "Error al agregar un rol"
+                    },
+                    "200": {
+                        "description": "Exito al agregar un rol"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/register": {
             "post": {
                 "summary": "Registrar usuarios",
-                "operationId": "App\\Http\\Controllers\\UserController::register",
                 "requestBody": {
                     "description": "Introducir Datos",
                     "required": true,
@@ -24,8 +56,8 @@
                             "schema": {
                                 "required": [
                                     "email",
-                                    "name",
-                                    "password"
+                                    "password",
+                                    "role_id"
                                 ],
                                 "properties": {
                                     "email": {
@@ -38,10 +70,10 @@
                                         "format": "password",
                                         "example": "Contraseña"
                                     },
-                                    "name": {
-                                        "type": "string",
-                                        "format": "name",
-                                        "example": "Nombre"
+                                    "role_id": {
+                                        "type": "integer",
+                                        "format": "integer",
+                                        "example": "1"
                                     }
                                 },
                                 "type": "object"
@@ -53,10 +85,99 @@
                     "200": {
                         "description": "Usuario Registrado"
                     },
-                    "default": {
-                        "description": "Ha ocurrido un error."
+                    "422": {
+                        "description": "Error de Validacion."
                     }
                 }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "summary": "Login",
+                "requestBody": {
+                    "description": "Introducir Datos",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "ejemplo@mail.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "Contraseña"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "422": {
+                        "description": "Error de Validacion"
+                    },
+                    "200": {
+                        "description": "Login Exitoso."
+                    },
+                    "401": {
+                        "description": "Error de Credenciales."
+                    }
+                }
+            }
+        },
+        "/api/refreshToken": {
+            "post": {
+                "summary": "Refresh Token",
+                "operationId": "App\\Http\\Controllers\\UserController::refreshToken",
+                "responses": {
+                    "422": {
+                        "description": "Error al refrescar el token"
+                    },
+                    "200": {
+                        "description": "Refresh Token Exitoso"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/logout": {
+            "post": {
+                "summary": "Logout",
+                "operationId": "App\\Http\\Controllers\\UserController::logout",
+                "responses": {
+                    "422": {
+                        "description": "Error al cerrar sesion"
+                    },
+                    "200": {
+                        "description": "Logout Exitoso."
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer"
             }
         }
     },

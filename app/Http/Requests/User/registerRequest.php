@@ -31,18 +31,27 @@ class registerRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'      => 'required',
-            'password'  => 'required',
-            'email'     => 'required'
+            'password' => [
+                'required',
+                'min:6',             // must be at least 6 characters in length
+                // 'regex:/[A-Z]/',      // must contain at least one uppercase letter
+                // 'regex:/[0-9]/',      // must contain at least one digit
+                // 'regex:/[@$!%*#?&]/', // must contain a special character
+            ],
+            'email'     => 'required|unique:users|email',
+            'role_id'   => 'required',
         ];
     }
 
     public function messages()
     {
         return [
-            'name.required' => 'El nombre del permiso es requerido',
-            'password.required' => 'La contraseña del permiso es requerido',
-            'email.required' => 'El correo del permiso es requerido',
+            'password.required' => 'La contraseña es requerido',
+            'password.min' => 'La contraseña minimo 6 caracteres',
+            'email.required' => 'El correo es requerido',
+            'email.unique' => 'El correo ya se encuentra registrado',
+            'email.email' => 'Ingrese un correo valido',
+            'role_id.required' => 'El rol es requerido',
         ];
     }
 }

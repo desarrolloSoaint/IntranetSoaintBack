@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\RoleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +17,11 @@ use App\Http\Controllers\UserController;
 */
 
 Route::post('register',[UserController::class, 'register']);
+Route::post('login',[UserController::class, 'login']);
+Route::get('getRoles',[RoleController::class, 'getRoles']);
+
+Route::group(['middleware' => 'jwt.auth'], function () {
+    Route::post('logout',[UserController::class, 'logout']);
+    Route::post('refreshToken',[UserController::class, 'refreshToken']);
+    Route::post('addRole',[RoleController::class, 'addRole']);    
+});
