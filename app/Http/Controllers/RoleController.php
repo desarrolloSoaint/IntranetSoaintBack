@@ -12,6 +12,7 @@ class RoleController extends Controller
 * @OA\GET(
 *     path="/api/getRoles",
 *     summary="Obtener los roles",
+*     tags={"Roles"},
 * @OA\Response(
 *         response=422,
 *         description="Error al obtener los Roles"
@@ -42,6 +43,15 @@ class RoleController extends Controller
 * @OA\GET(
 *     path="/api/addRole",
 *     summary="Agregar Roles",
+*     tags={"Roles"},
+* @OA\RequestBody(
+*    required=true,
+*    description="Introducir Datos",
+*    @OA\JsonContent(
+*       required={"type"},
+*       @OA\Property(property="type", type="string", format="text", example="Usuario") 
+*    ),
+* ),
 * @OA\Response(
 *         response=422,
 *         description="Error al agregar un rol"

@@ -14,6 +14,9 @@
     "paths": {
         "/api/getRoles": {
             "get": {
+                "tags": [
+                    "Roles"
+                ],
                 "summary": "Obtener los roles",
                 "operationId": "App\\Http\\Controllers\\RoleController::getRoles",
                 "responses": {
@@ -28,8 +31,32 @@
         },
         "/api/addRole": {
             "get": {
+                "tags": [
+                    "Roles"
+                ],
                 "summary": "Agregar Roles",
                 "operationId": "App\\Http\\Controllers\\RoleController::addRole",
+                "requestBody": {
+                    "description": "Introducir Datos",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "type"
+                                ],
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "Usuario"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "422": {
                         "description": "Error al agregar un rol"
@@ -45,9 +72,84 @@
                 ]
             }
         },
+        "/api/getRules": {
+            "get": {
+                "tags": [
+                    "Rules"
+                ],
+                "summary": "Obtener reglas",
+                "operationId": "App\\Http\\Controllers\\RuleController::index",
+                "responses": {
+                    "200": {
+                        "description": "Reglas Obtenidas con Exito"
+                    },
+                    "422": {
+                        "description": "Error al Obtener las Reglas"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/addRules": {
+            "post": {
+                "tags": [
+                    "Rules"
+                ],
+                "summary": "Registrar regla",
+                "operationId": "App\\Http\\Controllers\\RuleController::store",
+                "requestBody": {
+                    "description": "Introducir Datos",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "description"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "Hora de Entrada"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "8:00 AM"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Regla Registrada"
+                    },
+                    "422": {
+                        "description": "Error al Registrar la Regla"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/register": {
             "post": {
+                "tags": [
+                    "Security"
+                ],
                 "summary": "Registrar usuarios",
+                "operationId": "App\\Http\\Controllers\\UserController::register",
                 "requestBody": {
                     "description": "Introducir Datos",
                     "required": true,
@@ -93,6 +195,9 @@
         },
         "/api/login": {
             "post": {
+                "tags": [
+                    "Security"
+                ],
                 "summary": "Login",
                 "requestBody": {
                     "description": "Introducir Datos",
@@ -136,6 +241,9 @@
         },
         "/api/refreshToken": {
             "post": {
+                "tags": [
+                    "Token"
+                ],
                 "summary": "Refresh Token",
                 "operationId": "App\\Http\\Controllers\\UserController::refreshToken",
                 "responses": {
@@ -155,6 +263,9 @@
         },
         "/api/logout": {
             "post": {
+                "tags": [
+                    "Security"
+                ],
                 "summary": "Logout",
                 "operationId": "App\\Http\\Controllers\\UserController::logout",
                 "responses": {
@@ -163,6 +274,49 @@
                     },
                     "200": {
                         "description": "Logout Exitoso."
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/getUserRole": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Obtener Rol del Usuario",
+                "operationId": "App\\Http\\Controllers\\UserController::getUserRole",
+                "requestBody": {
+                    "description": "Introducir Datos",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "ejemplo@mail.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Exito"
+                    },
+                    "422": {
+                        "description": "Error"
                     }
                 },
                 "security": [

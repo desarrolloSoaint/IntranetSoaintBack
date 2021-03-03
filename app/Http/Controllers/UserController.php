@@ -13,12 +13,13 @@ use Validator;
 
 class UserController extends Controller
 {
-    public function register (registerRequest $request) {
+
 
 /**
 * @OA\POST(
 *     path="/api/register",
 *     summary="Registrar usuarios",
+*     tags={"Security"},
 * @OA\RequestBody(
 *    required=true,
 *    description="Introducir Datos",
@@ -39,7 +40,8 @@ class UserController extends Controller
 *     )
 * )
 */
-        
+    public function register (registerRequest $request) {        
+    
         try{
             
             $register = new User();
@@ -48,10 +50,6 @@ class UserController extends Controller
             $register->password = $pwd;
             $register->save();
 
-            // return [
-            //     'success'   => true,
-            //     'message'   => "Registro Exitoso",
-            // ];
             return $this->login($request);
 
         } catch ( Exception $e ){
@@ -70,6 +68,7 @@ class UserController extends Controller
 * @OA\POST(
 *     path="/api/login",
 *     summary="Login",
+*     tags={"Security"},
 * @OA\RequestBody(
 *    required=true,
 *    description="Introducir Datos",
@@ -128,6 +127,7 @@ class UserController extends Controller
 * @OA\POST(
 *     path="/api/refreshToken",
 *     summary="Refresh Token",
+*     tags={"Token"},
 * @OA\Response(
 *         response=422,
 *         description="Error al refrescar el token"
@@ -168,6 +168,7 @@ class UserController extends Controller
 * @OA\POST(
 *     path="/api/logout",
 *     summary="Logout",
+*     tags={"Security"},
 * @OA\Response(
 *         response=422,
 *         description="Error al cerrar sesion"
@@ -195,6 +196,50 @@ class UserController extends Controller
                 'success'  => false,
                 'message'  => 'Error al cerrar sesion'
             ],422);
+        }
+    }
+
+    
+
+/**
+* @OA\POST(
+*     path="/api/getUserRole",
+*     summary="Obtener Rol del Usuario",
+*     tags={"User"},
+* @OA\RequestBody(
+*    required=true,
+*    description="Introducir Datos",
+*    @OA\JsonContent(
+*       required={"email"},
+*       @OA\Property(property="email", type="string", format="email", example="ejemplo@mail.com") 
+*    ),
+* ),
+* @OA\Response(
+*         response=200,
+*         description="Exito"
+*     ),
+* @OA\Response(
+*         response="422",
+*         description="Error"
+*     ),
+*     security={
+*       {"bearerAuth": {}}
+*     }
+* )
+*/
+    public function getUserRole (Request $request) {            
+        try{
+            
+            $user = User::where('email',$request['email'])->get()->first();
+
+            return $user->role;
+
+        } catch ( Exception $e ){
+            
+            return [
+                'success'   => false,
+                'message'   => "Error al obtener el rol",
+            ];
         }
     }
 
