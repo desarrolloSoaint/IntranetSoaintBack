@@ -13,17 +13,33 @@ class RuleController extends Controller
 /**
 * @OA\GET(
 *     path="/api/getRules",
+*     operationId="getRules",
 *     summary="Obtener reglas",
 *     tags={"Rules"},
 * @OA\Response(
-*         response=200,
-*         description="Reglas Obtenidas con Exito"
-*     ),
+*          response=200,
+*          description="Successful operation",
+*          @OA\MediaType(
+*           mediaType="application/json",
+*          )
+*      ),
 * @OA\Response(
-*         response="422",
-*         description="Error al Obtener las Reglas"
-*     ),
-*     security={
+*         response=401,
+*         description="Unauthenticated",
+*      ),
+* @OA\Response(
+*         response=403,
+*         description="Forbidden"
+*      ),
+* @OA\Response(
+*         response=400,
+*         description="Bad Request"
+*      ),
+* @OA\Response(
+*          response=404,
+*          description="Not found"
+*   ),
+* security={
 *       {"bearerAuth": {}}
 *     }
 * )
@@ -31,38 +47,77 @@ class RuleController extends Controller
 
     public function index()
     {
-        $rule = Rule::orderBy('id','Desc')->paginate(10);
-
-        return $rule;
+        try{
+            
+            return Rule::orderBy('id', 'ASC')->get();
+        
+        }catch(Exception $e){
+            return [
+                'success'   => false,
+                'message'   => "Error al obtener las reglas",
+            ];
+        }
     }
 
 /**
 * @OA\POST(
 *     path="/api/addRules",
+*     operationId="addRules",
 *     summary="Registrar regla",
 *     tags={"Rules"},
-* @OA\RequestBody(
-*    required=true,
-*    description="Introducir Datos",
-*    @OA\JsonContent(
-*       required={"name","description"},
-*       @OA\Property(property="name", type="string", format="text", example="Hora de Entrada"),
-*       @OA\Property(property="description", type="string", format="text", example="8:00 AM") 
-*    ),
-* ),
+*  @OA\Parameter(
+*      name="name",
+*      in="query",
+*      required=true,
+*      @OA\Schema(
+*           type="string"
+*      )
+*   ),
+*  @OA\Parameter(
+*      name="start_time",
+*      in="query",
+*      required=true,
+*      @OA\Schema(
+*           type="string"
+*      )
+*   ),
+*  @OA\Parameter(
+*      name="finish_time",
+*      in="query",
+*      required=true,
+*      @OA\Schema(
+*           type="string"
+*      )
+*   ),
 * @OA\Response(
-*         response=200,
-*         description="Regla Registrada"
-*     ),
+*          response=200,
+*          description="Successful operation",
+*          @OA\MediaType(
+*           mediaType="application/json",
+*          )
+*      ),
 * @OA\Response(
-*         response="422",
-*         description="Error al Registrar la Regla"
-*     ),
-*     security={
+*         response=401,
+*         description="Unauthenticated",
+*      ),
+* @OA\Response(
+*         response=403,
+*         description="Forbidden"
+*      ),
+* @OA\Response(
+*         response=400,
+*         description="Bad Request"
+*      ),
+* @OA\Response(
+*          response=404,
+*          description="Not found"
+*   ),
+* security={
 *       {"bearerAuth": {}}
 *     }
 * )
 */
+
 
     public function store(ruleRequest $request)
     {
@@ -86,48 +141,179 @@ class RuleController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+/**
+* @OA\GET(
+*      path="/api/showRule/{id}",
+*      operationId="showRule",
+*      tags={"Rules"},
+*      summary="Obtener regla especifica",
+* @OA\Parameter(
+*      name="id",
+*      in="path",
+*      required=true,
+*      @OA\Schema(
+*           type="integer"
+*      )
+*   ),
+* @OA\Response(
+*          response=200,
+*          description="Successful operation",
+*          @OA\MediaType(
+*           mediaType="application/json",
+*          )
+*      ),
+* @OA\Response(
+*         response=401,
+*         description="Unauthenticated",
+*      ),
+* @OA\Response(
+*         response=403,
+*         description="Forbidden"
+*      ),
+* @OA\Response(
+*         response=400,
+*         description="Bad Request"
+*      ),
+* @OA\Response(
+*          response=404,
+*          description="Not found"
+*   ),
+* security={
+*       {"bearerAuth": {}}
+*     }
+* )
+*/
     public function show($id)
     {
-        //
+        try{
+            
+            $rule = Rule::findOrFail($id);
+            return $rule;
+
+        }catch(Exception $e){
+            
+            return [
+                'success'   => false,
+                'message'   => "Error al mostrar la regla",
+            ];
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+/**
+* @OA\DELETE(
+*      path="/api/deleteRule/{id}",
+*      operationId="deleteRule",
+*      tags={"Rules"},
+*      summary="Eliminar regla",
+* @OA\Parameter(
+*      name="id",
+*      in="path",
+*      required=true,
+*      @OA\Schema(
+*           type="integer"
+*      )
+*   ),
+* @OA\Response(
+*          response=200,
+*          description="Successful operation",
+*          @OA\MediaType(
+*           mediaType="application/json",
+*          )
+*      ),
+* @OA\Response(
+*         response=401,
+*         description="Unauthenticated",
+*      ),
+* @OA\Response(
+*         response=403,
+*         description="Forbidden"
+*      ),
+* @OA\Response(
+*         response=400,
+*         description="Bad Request"
+*      ),
+* @OA\Response(
+*          response=404,
+*          description="Not found"
+*   ),
+* security={
+*       {"bearerAuth": {}}
+*     }
+* )
+*/
     public function destroy($id)
     {
-        //
+        try{
+            $rule = Rule::findOrFail($id);
+            $rule->delete();
+            return [
+                'success'   => true,
+                'message'   => "Regla eliminada con exito",
+            ];
+        }catch(Exception $e){
+            return [
+                'success'   => false,
+                'message'   => "Error al eliminar la regla",
+            ];
+        }
+    }
+
+/**
+* @OA\POST(
+*      path="/api/restoreRule/{id}",
+*      operationId="restoreRule",
+*      tags={"Rules"},
+*      summary="Restaurar regla",
+* @OA\Parameter(
+*      name="id",
+*      in="path",
+*      required=true,
+*      @OA\Schema(
+*           type="integer"
+*      )
+*   ),
+* @OA\Response(
+*          response=200,
+*          description="Successful operation",
+*          @OA\MediaType(
+*           mediaType="application/json",
+*          )
+*      ),
+* @OA\Response(
+*         response=401,
+*         description="Unauthenticated",
+*      ),
+* @OA\Response(
+*         response=403,
+*         description="Forbidden"
+*      ),
+* @OA\Response(
+*         response=400,
+*         description="Bad Request"
+*      ),
+* @OA\Response(
+*          response=404,
+*          description="Not found"
+*   ),
+* security={
+*       {"bearerAuth": {}}
+*     }
+* )
+*/
+    public function restore($id)
+    {
+        try{
+            $rule = Rule::onlyTrashed()->find($id);
+            $rule->restore();
+            return [
+                'success'   => true,
+                'message'   => "Regla restaurada con exito",
+            ];
+        }catch(Exception $e){
+            return [
+                'success'   => false,
+                'message'   => "Error al restaurar la regla",
+            ];
+        }
     }
 }

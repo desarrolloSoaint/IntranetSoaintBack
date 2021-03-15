@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Rule;
+namespace App\Http\Requests\Schedule;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class ruleRequest extends FormRequest
+class scheduleRequest extends FormRequest
 {
     protected function failedValidation(Validator $validator)
     {
@@ -31,15 +31,18 @@ class ruleRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'  => 'required|unique:rules'
+            'start_time'    => 'required',
+            'finish_time'   => 'required',
+            'rule_id'       => 'required',
         ];
     }
 
     public function messages()
     {
         return [
-            'name.required' => 'El nombre de la regla es requerido',
-            'name.unique'   => 'La regla ya se encuentra registrada'
+            'start_time.required'   => 'La hora de inicio es requerida',
+            'finish_time.required'  => 'La hora de fin es requerida',
+            'rule_id.required'      => 'El tipo de horario es requerido'
         ];
     }
 }

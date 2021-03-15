@@ -19,17 +19,31 @@ class UserController extends Controller
 * @OA\POST(
 *     path="/api/register",
 *     summary="Registrar usuarios",
-*     tags={"Security"},
-* @OA\RequestBody(
-*    required=true,
-*    description="Introducir Datos",
-*    @OA\JsonContent(
-*       required={"email","password","role_id"},
-*       @OA\Property(property="email", type="string", format="email", example="ejemplo@mail.com"),
-*       @OA\Property(property="password", type="string", format="password", example="Contraseña"),
-*       @OA\Property(property="role_id", type="integer", format="integer", example="1") 
-*    ),
-* ),
+*     tags={"Auth"},
+*  @OA\Parameter(
+*      name="email",
+*      in="query",
+*      required=true,
+*      @OA\Schema(
+*           type="string"
+*      )
+*   ),
+*  @OA\Parameter(
+*      name="password",
+*      in="query",
+*      required=true,
+*      @OA\Schema(
+*           type="string"
+*      )
+*   ),
+*  @OA\Parameter(
+*      name="role_id",
+*      in="query",
+*      required=true,
+*      @OA\Schema(
+*           type="integer"
+*      )
+*   ),
 * @OA\Response(
 *         response=200,
 *         description="Usuario Registrado"
@@ -61,23 +75,27 @@ class UserController extends Controller
         }
      }
 
-
-    public function login(Request $request){
-
 /**
 * @OA\POST(
 *     path="/api/login",
 *     summary="Login",
-*     tags={"Security"},
-* @OA\RequestBody(
-*    required=true,
-*    description="Introducir Datos",
-*    @OA\JsonContent(
-*       required={"email","password"},
-*       @OA\Property(property="email", type="string", format="email", example="ejemplo@mail.com"),
-*       @OA\Property(property="password", type="string", format="password", example="Contraseña") 
-*    ),
-* ),
+*     tags={"Auth"},
+*  @OA\Parameter(
+*      name="email",
+*      in="query",
+*      required=true,
+*      @OA\Schema(
+*           type="string"
+*      )
+*   ),
+*  @OA\Parameter(
+*      name="password",
+*      in="query",
+*      required=true,
+*      @OA\Schema(
+*           type="string"
+*      )
+*   ),
 * @OA\Response(
 *         response=422,
 *         description="Error de Validacion"
@@ -92,6 +110,7 @@ class UserController extends Controller
 *     )
 * )
 */
+    public function login(Request $request){
 
         $credentials = $request->only('email','password');
         $validator = Validator::make($credentials,[
@@ -102,7 +121,7 @@ class UserController extends Controller
         if ($validator->fails()){
             return response()->json([
                 'success'  => false,
-                'message'  => 'Ingrese un correo o contraseña valida'
+                'message'  => 'Ingrese un correo y contraseña valida'
             ],422);
         }
 
@@ -168,7 +187,7 @@ class UserController extends Controller
 * @OA\POST(
 *     path="/api/logout",
 *     summary="Logout",
-*     tags={"Security"},
+*     tags={"Auth"},
 * @OA\Response(
 *         response=422,
 *         description="Error al cerrar sesion"
@@ -206,14 +225,14 @@ class UserController extends Controller
 *     path="/api/getUserRole",
 *     summary="Obtener Rol del Usuario",
 *     tags={"User"},
-* @OA\RequestBody(
-*    required=true,
-*    description="Introducir Datos",
-*    @OA\JsonContent(
-*       required={"email"},
-*       @OA\Property(property="email", type="string", format="email", example="ejemplo@mail.com") 
-*    ),
-* ),
+*  @OA\Parameter(
+*      name="email",
+*      in="query",
+*      required=true,
+*      @OA\Schema(
+*           type="string"
+*      )
+*   ),
 * @OA\Response(
 *         response=200,
 *         description="Exito"
@@ -239,6 +258,38 @@ class UserController extends Controller
             return [
                 'success'   => false,
                 'message'   => "Error al obtener el rol",
+            ];
+        }
+    }
+
+/**
+* @OA\GET(
+*     path="/api/getUsers",
+*     summary="Obtener los Usuarios",
+*     tags={"User"},
+* @OA\Response(
+*         response=200,
+*         description="Exito"
+*     ),
+* @OA\Response(
+*         response="422",
+*         description="Error"
+*     ),
+*     security={
+*       {"bearerAuth": {}}
+*     }
+* )
+*/
+    public function getUsers () {            
+        try{
+            
+            return User::orderBy('id', 'ASC')->get();
+
+        } catch ( Exception $e ){
+            
+            return [
+                'success'   => false,
+                'message'   => "Error al obtener los usuarios",
             ];
         }
     }

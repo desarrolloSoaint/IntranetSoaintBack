@@ -39,7 +39,7 @@ class registerRequest extends FormRequest
                 // 'regex:/[@$!%*#?&]/', // must contain a special character
             ],
             'email'     => 'required|unique:users|email',
-            'role_id'   => 'required',
+            'role_id'   => 'required'
         ];
     }
 
@@ -51,7 +51,7 @@ class registerRequest extends FormRequest
             'email.required' => 'El correo es requerido',
             'email.unique' => 'El correo ya se encuentra registrado',
             'email.email' => 'Ingrese un correo valido',
-            'role_id.required' => 'El rol es requerido',
+            'role_id.required' => 'El rol es requerido'
         ];
     }
 }

@@ -6,24 +6,23 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Rule extends Model
+
+class Schedule extends Model
 {
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'rules';
+    protected $table = 'schedule';
 
     protected $dates = ['deleted_at'];
 
     protected $fillable = [
-        'name'
+        'start_time',
+        'finish_time',
+        'rule_id'
     ];
 
-    public function shedules() {
-		return $this->hasMany('App\Models\Schedule');
-	}
-
-    public function users() {
-		return $this->belongsToMany('App\Models\User')->withPivot(['date','start_time','finish_time']);
+    public function rules() {
+		return $this->belongsTo('App\Models\Rule');
 	}
 }

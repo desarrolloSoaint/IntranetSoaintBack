@@ -44,14 +44,14 @@ class RoleController extends Controller
 *     path="/api/addRole",
 *     summary="Agregar Roles",
 *     tags={"Roles"},
-* @OA\RequestBody(
-*    required=true,
-*    description="Introducir Datos",
-*    @OA\JsonContent(
-*       required={"type"},
-*       @OA\Property(property="type", type="string", format="text", example="Usuario") 
-*    ),
-* ),
+*  @OA\Parameter(
+*      name="type",
+*      in="query",
+*      required=true,
+*      @OA\Schema(
+*           type="string"
+*      )
+*   ),
 * @OA\Response(
 *         response=422,
 *         description="Error al agregar un rol"
