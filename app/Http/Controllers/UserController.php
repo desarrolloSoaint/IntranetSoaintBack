@@ -112,33 +112,43 @@ class UserController extends Controller
 */
     public function login(Request $request){
 
-        $credentials = $request->only('email','password');
-        $validator = Validator::make($credentials,[
-            'email'     => 'required|email',
-            'password'  => 'required'
-        ]);
+        try{
 
-        if ($validator->fails()){
-            return response()->json([
-                'success'  => false,
-                'message'  => 'Ingrese un correo y contraseña valida'
-            ],422);
+            $credentials = $request->only('email','password');
+            $validator = Validator::make($credentials,[
+                'email'     => 'required|email',
+                'password'  => 'required'
+            ]);
+    
+            if ($validator->fails()){
+                return response()->json([
+                    'success'  => false,
+                    'message'  => 'Ingrese un correo y contraseña valida'
+                ],422);
+            }
+    
+            $token = JWTAuth::attempt($credentials);
+    
+            if ($token){
+                return response()->json([
+                    'success'  => true,
+                    'access_token'  => $token,
+                    'user' => User::where('email',$credentials['email'])->get()->first()
+                ],200);
+            }else{
+                return response()->json([
+                    'success'  => false,
+                    'message'  => 'Correo o Contraseña incorrecta'
+                ],401);
+            }
+
+        }catch(Exeption $e){
+            return [
+                'success'   => false,
+                'message'   => "Login Fallido",
+            ];
         }
 
-        $token = JWTAuth::attempt($credentials);
-
-        if ($token){
-            return response()->json([
-                'success'  => true,
-                'access_token'  => $token,
-                'user' => User::where('email',$credentials['email'])->get()->first()
-            ],200);
-        }else{
-            return response()->json([
-                'success'  => false,
-                'message'  => 'Correo o Contraseña incorrecta'
-            ],401);
-        }
 
     }
 
@@ -290,6 +300,38 @@ class UserController extends Controller
             return [
                 'success'   => false,
                 'message'   => "Error al obtener los usuarios",
+            ];
+        }
+    }
+
+/**
+* @OA\GET(
+*     path="/api/countOfUsers",
+*     summary="Obtener numero de Usuarios",
+*     tags={"User"},
+* @OA\Response(
+*         response=200,
+*         description="Exito"
+*     ),
+* @OA\Response(
+*         response="422",
+*         description="Error"
+*     ),
+*     security={
+*       {"bearerAuth": {}}
+*     }
+* )
+*/
+    public function countOfUsers () {            
+        try{
+            
+            return User::count();
+
+        } catch ( Exception $e ){
+            
+            return [
+                'success'   => false,
+                'message'   => "Error al obtener el numero de usuarios",
             ];
         }
     }

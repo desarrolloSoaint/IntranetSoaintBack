@@ -15,6 +15,7 @@ class AccessControl extends Model
         'date',
         'start_time',
         'finish_time',
+        'observation',
         'rule_id',
         'user_id'
     ];

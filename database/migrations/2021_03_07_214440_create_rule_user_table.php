@@ -20,6 +20,7 @@ class CreateRuleUserTable extends Migration
             $table->string('date');
             $table->string('start_time');
             $table->string('finish_time')->nullable();
+            $table->string('observation')->nullable();
             $table->timestamps();
         });
     }

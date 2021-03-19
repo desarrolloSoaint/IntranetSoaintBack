@@ -52,7 +52,7 @@ class User extends Authenticatable implements JWTSubject
 	}
 
     public function rules(){
-		return $this->belongsToMany('App\Models\Rule')->withPivot(['date','start_time','finish_time']);
+		return $this->belongsToMany('App\Models\Rule')->withPivot(['date','start_time','finish_time','observation']);
 	}
 
     public function getJWTIdentifier()

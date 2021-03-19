@@ -24,6 +24,6 @@ class Rule extends Model
 	}
 
     public function users() {
-		return $this->belongsToMany('App\Models\User')->withPivot(['date','start_time','finish_time']);
+		return $this->belongsToMany('App\Models\User')->withPivot(['date','start_time','finish_time','observation']);
 	}
 }

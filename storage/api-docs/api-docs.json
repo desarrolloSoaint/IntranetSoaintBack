@@ -286,6 +286,74 @@
                 ]
             }
         },
+        "/api/addObservation": {
+            "post": {
+                "tags": [
+                    "Access Control"
+                ],
+                "summary": "Agregar una observacion",
+                "operationId": "addObservation",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "rule_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "text",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "date",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/clearHistory": {
             "get": {
                 "tags": [
@@ -410,6 +478,40 @@
                 ],
                 "summary": "Obtener reglas",
                 "operationId": "getRules",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/countOfRules": {
+            "get": {
+                "tags": [
+                    "Rules"
+                ],
+                "summary": "Obtener numero de reglas",
+                "operationId": "countOfRules",
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -680,6 +782,40 @@
                         }
                     }
                 ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/countOfSchedules": {
+            "get": {
+                "tags": [
+                    "Schedules"
+                ],
+                "summary": "Obtener numero de horarios",
+                "operationId": "countOfSchedules",
                 "responses": {
                     "200": {
                         "description": "Successful operation",
@@ -1199,6 +1335,28 @@
                 ],
                 "summary": "Obtener los Usuarios",
                 "operationId": "App\\Http\\Controllers\\UserController::getUsers",
+                "responses": {
+                    "200": {
+                        "description": "Exito"
+                    },
+                    "422": {
+                        "description": "Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/countOfUsers": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Obtener numero de Usuarios",
+                "operationId": "App\\Http\\Controllers\\UserController::countOfUsers",
                 "responses": {
                     "200": {
                         "description": "Exito"

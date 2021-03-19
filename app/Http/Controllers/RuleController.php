@@ -60,6 +60,55 @@ class RuleController extends Controller
     }
 
 /**
+* @OA\GET(
+*     path="/api/countOfRules",
+*     operationId="countOfRules",
+*     summary="Obtener numero de reglas",
+*     tags={"Rules"},
+* @OA\Response(
+*          response=200,
+*          description="Successful operation",
+*          @OA\MediaType(
+*           mediaType="application/json",
+*          )
+*      ),
+* @OA\Response(
+*         response=401,
+*         description="Unauthenticated",
+*      ),
+* @OA\Response(
+*         response=403,
+*         description="Forbidden"
+*      ),
+* @OA\Response(
+*         response=400,
+*         description="Bad Request"
+*      ),
+* @OA\Response(
+*          response=404,
+*          description="Not found"
+*   ),
+* security={
+*       {"bearerAuth": {}}
+*     }
+* )
+*/
+
+    public function countOfRules()
+    {
+        try{
+            
+            return Rule::count();
+        
+        }catch(Exception $e){
+            return [
+                'success'   => false,
+                'message'   => "Error al obtener el numero de reglas",
+            ];
+        }
+    }
+
+/**
 * @OA\POST(
 *     path="/api/addRules",
 *     operationId="addRules",
@@ -126,6 +175,7 @@ class RuleController extends Controller
             $rule = new Rule();
             $rule->fill($request->all());
             $rule->save();
+
             return [
                 'success'   => true,
                 'message'   => "Regla agregada con exito",
@@ -244,12 +294,15 @@ class RuleController extends Controller
     public function destroy($id)
     {
         try{
+
             $rule = Rule::findOrFail($id);
             $rule->delete();
+
             return [
                 'success'   => true,
                 'message'   => "Regla eliminada con exito",
             ];
+
         }catch(Exception $e){
             return [
                 'success'   => false,
@@ -303,12 +356,15 @@ class RuleController extends Controller
     public function restore($id)
     {
         try{
+
             $rule = Rule::onlyTrashed()->find($id);
             $rule->restore();
+
             return [
                 'success'   => true,
                 'message'   => "Regla restaurada con exito",
             ];
+
         }catch(Exception $e){
             return [
                 'success'   => false,

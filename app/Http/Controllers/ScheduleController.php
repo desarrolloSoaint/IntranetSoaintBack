@@ -50,12 +50,15 @@ class ScheduleController extends Controller
     public function index()
     {
         try{
+
             $schedules = DB::table('rules')
             ->join('schedule', 'rules.id', '=', 'schedule.rule_id')
             ->select('schedule.id','rules.name','schedule.start_time','schedule.finish_time','schedule.status')
             ->where('schedule.deleted_at','=',null)
             ->orderBy('status')
+            ->orderBy('name')
             ->get();
+
             return $schedules;
         
         }catch(Exception $e){
@@ -111,15 +114,63 @@ class ScheduleController extends Controller
     public function show($id)
     {
         try{
-            
-            $schedule = Schedule::findOrFail($id);
-            return $schedule;
+
+            return Schedule::findOrFail($id);
 
         }catch(Exception $e){
             
             return [
                 'success'   => false,
                 'message'   => "Error al obtener el horario",
+            ];
+        }
+    }
+
+/**
+* @OA\GET(
+*      path="/api/countOfSchedules",
+*      operationId="countOfSchedules",
+*      tags={"Schedules"},
+*      summary="Obtener numero de horarios",
+* @OA\Response(
+*          response=200,
+*          description="Successful operation",
+*          @OA\MediaType(
+*           mediaType="application/json",
+*          )
+*      ),
+* @OA\Response(
+*         response=401,
+*         description="Unauthenticated",
+*      ),
+* @OA\Response(
+*         response=403,
+*         description="Forbidden"
+*      ),
+* @OA\Response(
+*         response=400,
+*         description="Bad Request"
+*      ),
+* @OA\Response(
+*          response=404,
+*          description="Not found"
+*   ),
+* security={
+*       {"bearerAuth": {}}
+*     }
+* )
+*/
+    public function countOfSchedules()
+    {
+        try{
+            
+            return Schedule::count();
+
+        }catch(Exception $e){
+            
+            return [
+                'success'   => false,
+                'message'   => "Error al obtener el numero de horarios",
             ];
         }
     }
@@ -196,12 +247,14 @@ class ScheduleController extends Controller
                 $schedule = new Schedule();
                 $schedule->fill($request->all());
                 $schedule->save();
+            
                 return [
                     'success'   => true,
                     'message'   => "Horario agregado con exito",
                 ];
 
             }else{
+
                 return [
                     'success'   => false,
                     'message'   => "La hora final tiene que ser mayor que la inicial",
@@ -302,7 +355,7 @@ class ScheduleController extends Controller
                 
             return [
                 'success'   => false,
-                'message'   => "Error al modificar",
+                'message'   => "Error al modificar el horario",
             ];
         }
     }
@@ -352,12 +405,15 @@ class ScheduleController extends Controller
 public function destroy($id)
 {
     try{
+
         $schedule = Schedule::findOrFail($id);
         $schedule->delete();
+        
         return [
             'success'   => true,
             'message'   => "Horario eliminado con exito",
         ];
+
     }catch(Exception $e){
         return [
             'success'   => false,
@@ -472,11 +528,11 @@ public function restore($id)
         try{
             $schedule = Schedule::find($id);
             $isActive = DB::table('rules')
-            ->join('schedule', 'rules.id', '=', 'schedule.rule_id')
-            ->select('schedule.id')
-            ->where('schedule.rule_id','=',$schedule->rule_id)
-            ->where('schedule.status','=','Activo')
-            ->get()->first();
+                ->join('schedule', 'rules.id', '=', 'schedule.rule_id')
+                ->select('schedule.id')
+                ->where('schedule.rule_id','=',$schedule->rule_id)
+                ->where('schedule.status','=','Activo')
+                ->get()->first();
 
             if($isActive != null ){
                 $scheduleActive = Schedule::find($isActive->id);
@@ -543,11 +599,11 @@ public function restore($id)
         try{
 
             $schedules = DB::table('rules')
-            ->join('schedule', 'rules.id', '=', 'schedule.rule_id')
-            ->select('schedule.id','rules.name','schedule.start_time','schedule.finish_time')
-            ->where('schedule.status','=','Activo')
-            ->orderBy('name')
-            ->get();
+                ->join('schedule', 'rules.id', '=', 'schedule.rule_id')
+                ->select('schedule.id','rules.name','schedule.start_time','schedule.finish_time')
+                ->where('schedule.status','=','Activo')
+                ->orderBy('name')
+                ->get();
             
             return $schedules;
         
@@ -599,11 +655,11 @@ public function restore($id)
         try{
             
             $schedules = DB::table('rules')
-            ->join('schedule', 'rules.id', '=', 'schedule.rule_id')
-            ->select('schedule.id','rules.name','schedule.start_time','schedule.finish_time','schedule.status')
-            ->where('schedule.status','=','Inactivo')
-            ->orderBy('name')
-            ->get();
+                ->join('schedule', 'rules.id', '=', 'schedule.rule_id')
+                ->select('schedule.id','rules.name','schedule.start_time','schedule.finish_time','schedule.status')
+                ->where('schedule.status','=','Inactivo')
+                ->orderBy('name')
+                ->get();
 
             return $schedules;
         
